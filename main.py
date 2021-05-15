@@ -1,9 +1,5 @@
-import pandas as pd
-import numpy as np
-import sklearn
 import os
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score
 
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_wine
@@ -24,8 +20,8 @@ X_train_std = scaler.transform(X_train)
 
 dummy_clf = DummyClassifier()
 
-# cache_dir = os.path.join('cache')
-# memory = Memory(cache_dir)
+cache_dir = os.path.join('cache')
+memory = Memory(cache_dir)
 
 
 dummy_clf.fit(X_test_std, y_test)
