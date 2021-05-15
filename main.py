@@ -24,9 +24,17 @@ dummy_clf.fit(features, target)
 print(f'dummy TEST score: {dummy_clf.score(X_test, y_test)}')
 print(f'dummy TRAIN score: {dummy_clf.score(X_train, y_train)}')
 
+k_test = {}
+k_train = {}
 
-for i in range(1, 20):
+for i in range(1, 21):
     kneighbor_clf = KNeighborsClassifier(n_neighbors=i)
     kneighbor_clf.fit(features, target)
-    print(f'Kneighbor TEST score for {i} neighbors: {kneighbor_clf.score(X_test, y_test)}')
-    print(f'Kneighbor TRAIN score for {i} neighbors: {kneighbor_clf.score(X_train, y_train)}')
+    k_test[f'Kneighbor TEST score for {i} neighbors:'] = kneighbor_clf.score(X_test, y_test)
+    k_train[f'Kneighbor TRAIN score for {i} neighbors:'] = kneighbor_clf.score(X_train, y_train)
+
+for key, value in k_test.items():
+    print(key, value)
+
+for key, value in k_train.items():
+    print(key, value)
