@@ -3,14 +3,15 @@ import matplotlib.pyplot as plt
 
 from sklearn.datasets import load_diabetes
 from sklearn.dummy import DummyClassifier
-from sklearn.linear_model import LinearRegression, Lasso, Ridge, LassoCV
+from sklearn.linear_model import LinearRegression, Lasso, Ridge, LassoCV, RidgeCV
 from sklearn.metrics import r2_score, mean_squared_error
 from sklearn.model_selection import train_test_split
 from matplotlib.pyplot import scatter
 
 lasso = Lasso
 ridge = Ridge
-lassocv = LassoCV
+lasso_cv = LassoCV
+ridge_cv = RidgeCV
 
 
 def collecting_data():
@@ -84,12 +85,15 @@ class Base:
 
         return r2_test, rmse_test, r2_train, rmse_train
 
-    def cv(self, method, n_alphas):
+    def cv(self, method, n_alphas, mt=None):
         """
 
         :return: 4 floats - r2 and rmse for test and train
         """
-        mt = method(n_alphas=n_alphas, cv=4, random_state=0).fit(self.train_x, self.train_y)
+        if method == lasso_cv:
+            mt = method(n_alphas=n_alphas, cv=4, random_state=0).fit(self.train_x, self.train_y)
+        elif method == ridge_cv:
+            mt = method(cv=4).fit(self.train_x, self.train_y)
 
         score = mt.score(self.train_x, self.train_y)
 
@@ -103,8 +107,7 @@ ridge_score_r2 = {}
 lasso_score_rmse = {}
 ridge_score_rmse = {}
 
-lasso_cv_score_rmse = {}
-lasso_cv_score_r2 = {}
+lasso_cv_score = {}
 
 for i in range(1, 21):
     print(f"r_2 lasso for alpha = {i}: {base.clasiffy(lasso, i)[0]}")
@@ -121,8 +124,15 @@ for i in range(1, 21):
 
 for i in range(100, 151):
 
-    lasso_cv_score_r2[i] = base.cv(lassocv, i)
-    lasso_cv_score_rmse[i] = base.cv(lassocv, i)
+    lasso_cv_score[i] = base.cv(lasso_cv, i)
+
+
+print(lasso_cv_score)
+
+
+ridge_score_cv = base.cv(ridge_cv, '')
+
+print(ridge_score_cv)
 
 
 def plot():
