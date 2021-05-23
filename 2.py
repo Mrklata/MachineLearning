@@ -12,6 +12,7 @@ lasso = Lasso
 ridge = Ridge
 lassocv = LassoCV
 
+
 def collecting_data():
     """
     :return: 4 numpy.ndarrray
@@ -83,14 +84,13 @@ class Base:
 
         return r2_test, rmse_test, r2_train, rmse_train
 
-    def cv(self, method, alpha):
+    def cv(self, method, n_alphas):
         """
 
         :return: 4 floats - r2 and rmse for test and train
         """
-        mt = method(alphas=[1e-3, 1e-2, 1e-1, 1])
+        mt = method(n_alphas=n_alphas, cv=4, random_state=0).fit(self.train_x, self.train_y)
 
-        mt.fit(self.train_x, self.train_y)
         score = mt.score(self.train_x, self.train_y)
 
         return score
@@ -119,8 +119,10 @@ for i in range(1, 21):
     ridge_score_r2[i] = base.clasiffy(ridge, i)[0]
     ridge_score_rmse[i] = base.clasiffy(ridge, i)[1]
 
-lasso_cv_score_r2[[1e-3, 1e-2, 1e-1, 1]] = base.cv(lassocv, [1e-3, 1e-2, 1e-1, 1])[0]
-lasso_cv_score_rmse[[1e-3, 1e-2, 1e-1, 1]] = base.cv(lassocv, [1e-3, 1e-2, 1e-1, 1])[1]
+for i in range(100, 151):
+
+    lasso_cv_score_r2[i] = base.cv(lassocv, i)
+    lasso_cv_score_rmse[i] = base.cv(lassocv, i)
 
 
 def plot():
