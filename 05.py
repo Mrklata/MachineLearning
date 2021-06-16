@@ -21,19 +21,16 @@ class Analytyst:
             centers=4,
             cluster_std=0.5,
             shuffle=True,
-            random_state=self.seed
+            random_state=self.seed,
         )
         self.km_classifier = KMeans(
-            n_clusters=4,
-            init='random',
-            n_init=10,
-            max_iter=300,
-            random_state=self.seed
+            n_clusters=4, init="random", n_init=10, max_iter=300, random_state=self.seed
         )
         self.y_km = self.km_classifier.fit_predict(self.x)
         self.x_wine, self.y_wine = load_wine(return_X_y=True)
-        x_train, x_test, y_train, y_test = train_test_split(self.x_wine, self.y_wine, test_size=0.2,
-                                                            random_state=self.seed)
+        x_train, x_test, y_train, y_test = train_test_split(
+            self.x_wine, self.y_wine, test_size=0.2, random_state=self.seed
+        )
         scaler = StandardScaler().fit(x_train)
         x_train_std = scaler.transform(x_train)
         self.pca = PCA(n_components=2, whiten=True)
@@ -42,11 +39,7 @@ class Analytyst:
     def blobs(self) -> None:
 
         plt.figure(figsize=(10, 8))
-        plt.scatter(
-            self.x[:, 0],
-            self.x[:, 1],
-            s=100
-        )
+        plt.scatter(self.x[:, 0], self.x[:, 1], s=100)
         plt.show()
 
     def k_means(self) -> None:
@@ -56,36 +49,48 @@ class Analytyst:
         plt.scatter(
             self.x[self.y_km == 0, 0],
             self.x[self.y_km == 0, 1],
-            c='red', edgecolor='black',
-            label='1', s=80
+            c="red",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.x[self.y_km == 1, 0],
             self.x[self.y_km == 1, 1],
-            c='green', edgecolor='black',
-            label='1', s=80
+            c="green",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.x[self.y_km == 2, 0],
             self.x[self.y_km == 2, 1],
-            c='blue', edgecolor='black',
-            label='1', s=80
+            c="blue",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.x[self.y_km == 3, 0],
             self.x[self.y_km == 3, 1],
-            c='orange', edgecolor='black',
-            label='1', s=80
+            c="orange",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.km_classifier.cluster_centers_[:, 0],
             self.km_classifier.cluster_centers_[:, 1],
-            c='yellow', marker="o", s=200, alpha=0.6,
-            edgecolor="black", label='Cent'
+            c="yellow",
+            marker="o",
+            s=200,
+            alpha=0.6,
+            edgecolor="black",
+            label="Cent",
         )
 
         plt.legend()
@@ -97,11 +102,7 @@ class Analytyst:
         print(self.pca.explained_variance_ratio_)
         print(self.pca.singular_values_)
         plt.figure(figsize=(8, 6))
-        plt.scatter(
-            self.x_reducted[:, 0],
-            self.x_reducted[:, 1],
-            s=100
-        )
+        plt.scatter(self.x_reducted[:, 0], self.x_reducted[:, 1], s=100)
 
         plt.show()
 
@@ -112,13 +113,19 @@ class Analytyst:
             kmeanModel = KMeans(n_clusters=k)
             kmeanModel.fit(self.x_wine)
             distortions.append(
-                sum(np.min(cdist(self.x_wine, kmeanModel.cluster_centers_, 'euclidean'), axis=1)) / self.x_wine.shape[
-                    0])
+                sum(
+                    np.min(
+                        cdist(self.x_wine, kmeanModel.cluster_centers_, "euclidean"),
+                        axis=1,
+                    )
+                )
+                / self.x_wine.shape[0]
+            )
 
-        plt.plot(K, distortions, 'bx-')
-        plt.xlabel('k')
-        plt.ylabel('Distortion')
-        plt.title('Elbow Method: optimal k')
+        plt.plot(K, distortions, "bx-")
+        plt.xlabel("k")
+        plt.ylabel("Distortion")
+        plt.title("Elbow Method: optimal k")
         plt.show()
 
     def silhouette(self) -> None:
@@ -132,12 +139,14 @@ class Analytyst:
             silhouette_avg = metrics.silhouette_score(self.x_wine, cluster_labels)
             silhouette_score.append(silhouette_avg)
 
-            print(f"AVG silhouette_score: {silhouette_avg} for n_clusters: {n_clusters}")
+            print(
+                f"AVG silhouette_score: {silhouette_avg} for n_clusters: {n_clusters}"
+            )
 
-        plt.plot(range_n_clusters, silhouette_score, 'bx-')
-        plt.xlabel('k')
-        plt.ylabel('silhouette_score')
-        plt.title('Silhouette Coefficient method: the optimal k')
+        plt.plot(range_n_clusters, silhouette_score, "bx-")
+        plt.xlabel("k")
+        plt.ylabel("silhouette_score")
+        plt.title("Silhouette Coefficient method: the optimal k")
         plt.show()
 
     def plot_second_scatter(self) -> None:
@@ -147,22 +156,30 @@ class Analytyst:
         plt.scatter(
             self.x_reducted[y_km == 0, 0],
             self.x_reducted[y_km == 0, 1],
-            c='green', edgecolor='black',
-            label='1', s=80
+            c="green",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.x_reducted[y_km == 1, 0],
             self.x_reducted[y_km == 1, 1],
-            c='orange', edgecolor='black',
-            label='1', s=80
+            c="orange",
+            edgecolor="black",
+            label="1",
+            s=80,
         )
 
         plt.scatter(
             self.km_classifier.cluster_centers_[:, 0],
             self.km_classifier.cluster_centers_[:, 1],
-            c='r', marker="o", s=200, alpha=0.6,
-            edgecolor="black", label='Cent'
+            c="r",
+            marker="o",
+            s=200,
+            alpha=0.6,
+            edgecolor="black",
+            label="Cent",
         )
 
         plt.legend()
@@ -172,11 +189,7 @@ class Analytyst:
     def k_mean(self) -> None:
         for i in ["random", "k-means++"]:
             k_mean = KMeans(
-                n_clusters=2,
-                init=i,
-                n_init=10,
-                max_iter=300,
-                random_state=self.seed
+                n_clusters=2, init=i, n_init=10, max_iter=300, random_state=self.seed
             )
 
             k_mean.fit(self.x_wine, self.y_wine)
@@ -199,12 +212,18 @@ class Analytyst:
         plt.figure(figsize=(10, 8))
         plt.clf()
         clusters, cluster_centers, labels = self.mean_shift()
-        colors = cycle('bgrcmykbgrcmykbgrcmykbgrcmyk')
+        colors = cycle("bgrcmykbgrcmykbgrcmykbgrcmyk")
         for k, col in zip(range(clusters), colors):
             members = labels == k
             cluster_center = cluster_centers[k]
-            plt.plot(self.x_wine[members, 0], self.x_wine[members, 1], col + '.')
-            plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col,
-                     markeredgecolor='k', markersize=14)
-        plt.title(f'clusters: {clusters}')
+            plt.plot(self.x_wine[members, 0], self.x_wine[members, 1], col + ".")
+            plt.plot(
+                cluster_center[0],
+                cluster_center[1],
+                "o",
+                markerfacecolor=col,
+                markeredgecolor="k",
+                markersize=14,
+            )
+        plt.title(f"clusters: {clusters}")
         plt.show()

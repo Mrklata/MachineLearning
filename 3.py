@@ -26,7 +26,9 @@ def score_by_fold():
     lasso_cv = LassoCV()
     for k, (train, test) in enumerate(kf.split(index, value)):
         lasso_cv.fit(index[train], value[train])
-        print(f"fold {k+1} alpha: {lasso_cv.alpha_}, score: {lasso_cv.score(index[test], value[test])}")
+        print(
+            f"fold {k+1} alpha: {lasso_cv.alpha_}, score: {lasso_cv.score(index[test], value[test])}"
+        )
 
 
 def cross_validation():

@@ -15,7 +15,7 @@ from hyperopt import tpe
 class Anaityst:
     def __init__(self):
         self.index, self.target = load_wine(return_X_y=True)
-        self.regr = LogisticRegression(solver='liblinear')
+        self.regr = LogisticRegression(solver="liblinear")
         self.penalty = ["l1", "l2"]
         self.data = np.logspace(0, 4, 1000)
         self.h_param = dict(C=self.data, penalty=self.penalty)
@@ -26,22 +26,29 @@ class Anaityst:
             n_iter=1000,
             cv=5,
             verbose=0,
-            n_jobs=-1
+            n_jobs=-1,
         )
         self.pipe = Pipeline([("classifier", RandomForestClassifier())])
         self.search_space = [
-            {"classifier": [self.regr],
-             "classifier__penalty": ["l1", "l2"],
-             "classifier__C": np.logspace(0, 4, 10)},
-            {"classifier": [RandomForestClassifier()],
-             "classifier__n_estimators": [10, 50, 100],
-             "classifier__max_features": [1, 2, 3]},
-            {"classifier": [KNeighborsClassifier()],
-             "classifier__n_neighbors": range(1, 10, 1),
-             "classifier__leaf_size": [30, 60, 90]}
+            {
+                "classifier": [self.regr],
+                "classifier__penalty": ["l1", "l2"],
+                "classifier__C": np.logspace(0, 4, 10),
+            },
+            {
+                "classifier": [RandomForestClassifier()],
+                "classifier__n_estimators": [10, 50, 100],
+                "classifier__max_features": [1, 2, 3],
+            },
+            {
+                "classifier": [KNeighborsClassifier()],
+                "classifier__n_neighbors": range(1, 10, 1),
+                "classifier__leaf_size": [30, 60, 90],
+            },
         ]
-        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(self.index, self.target, test_size=0.33,
-                                                                                random_state=42)
+        self.x_train, self.x_test, self.y_train, self.y_test = train_test_split(
+            self.index, self.target, test_size=0.33, random_state=42
+        )
 
     def grid(self):
         """
@@ -50,8 +57,8 @@ class Anaityst:
         """
         g_search = GridSearchCV(self.regr, self.h_param, cv=5, verbose=2, n_jobs=-1)
         model = g_search.fit(self.index, self.target)
-        print(model.best_estimator_.get_params()['penalty'])
-        print(model.best_estimator_.get_params()['C'])
+        print(model.best_estimator_.get_params()["penalty"])
+        print(model.best_estimator_.get_params()["C"])
 
     def random_s(self):
         """
@@ -59,8 +66,8 @@ class Anaityst:
         :return: None
         """
         model = self.random_search.fit(self.index, self.target)
-        print(model.best_estimator_.get_params()['penalty'])
-        print(model.best_estimator_.get_params()['C'])
+        print(model.best_estimator_.get_params()["penalty"])
+        print(model.best_estimator_.get_params()["C"])
 
     def pipeline(self):
         """
@@ -81,7 +88,7 @@ class Anaityst:
             preprocessing=any_preprocessing("pre"),
             algo=tpe.suggest,
             max_evals=20,
-            trial_timeout=30
+            trial_timeout=30,
         )
         model.fit(self.x_train, self.y_train)
         accuracy = model.score(self.x_test, self.x_train)

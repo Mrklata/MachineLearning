@@ -91,7 +91,9 @@ class Base:
         :return: 4 floats - r2 and rmse for test and train
         """
         if method == lasso_cv:
-            mt = method(n_alphas=n_alphas, cv=4, random_state=0).fit(self.train_x, self.train_y)
+            mt = method(n_alphas=n_alphas, cv=4, random_state=0).fit(
+                self.train_x, self.train_y
+            )
         elif method == ridge_cv:
             mt = method(cv=4).fit(self.train_x, self.train_y)
 
@@ -130,7 +132,7 @@ for i in range(100, 151):
 print(lasso_cv_score)
 
 
-ridge_score_cv = base.cv(ridge_cv, '')
+ridge_score_cv = base.cv(ridge_cv, "")
 
 print(ridge_score_cv)
 

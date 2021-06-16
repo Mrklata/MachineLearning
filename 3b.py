@@ -19,15 +19,16 @@ class Analytyst:
         :return: None
         """
         versions = [
-            [42, None, 'No'],
-            [42, self.target, 'Yes'],
-            [224, self.target, 'Yes'],
-            [224, None, 'No']
+            [42, None, "No"],
+            [42, self.target, "Yes"],
+            [224, self.target, "Yes"],
+            [224, None, "No"],
         ]
 
         for i in versions:
-            x_train, x_test, y_train, y_test = train_test_split(self.data, self.target, random_state=i[0],
-                                                                stratify=i[1])
+            x_train, x_test, y_train, y_test = train_test_split(
+                self.data, self.target, random_state=i[0], stratify=i[1]
+            )
 
             scaler = StandardScaler().fit(x_train)
             x_train_std = scaler.transform(x_train)
@@ -35,7 +36,9 @@ class Analytyst:
 
             self.kn_clf.fit(x_train_std, y_train)
 
-            print(f'test score for random_state={i[0]}, stratify={i[2]}: {self.kn_clf.score(x_test_std, y_test)}')
+            print(
+                f"test score for random_state={i[0]}, stratify={i[2]}: {self.kn_clf.score(x_test_std, y_test)}"
+            )
 
     def score_fold(self):
         """
@@ -49,14 +52,16 @@ class Analytyst:
             score = round(self.kn_clf.score(self.data[test], self.target[test]), 5)
             mean_lst.append(score)
 
-            print(f"""
+            print(
+                f"""
             score: {score}
             fold: {fold}
             train_bin: {np.bincount(self.target[train])}
             test_bin: {np.bincount(self.target[test])}
             train_shape: {np.shape(self.target[train])}
             test_shape: {np.shape(self.target[test])}
-            """)
+            """
+            )
 
 
 analytist = Analytyst()
