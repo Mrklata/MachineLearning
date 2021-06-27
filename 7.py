@@ -22,7 +22,7 @@ skf = StratifiedKFold(n_splits=3, random_state=seed, shuffle=True)
 x_train = pd.read_csv("train_data.csv", header=None)
 df_train_label = pd.read_csv("train_labels.csv", header=None)
 
-label = train_label_df[0].values
+label = df_train_label[0].values
 
 x_train, x_test, y_train, y_test = train_test_split(x_train, label, test_size=0.97, shuffle=True, random_state=seed)
 
@@ -62,12 +62,12 @@ search_area = [
 grid = GridSearchCV(pipe, search_area, cv=skf, verbose=0, n_jobs=-1)
 
 # searching for best model
-best_model = gridsearch.fit(x_train_std_pca, y_train)
+best_model = grid.fit(x_train_std_pca, y_train)
 
 # best model results
 print(best_model.best_estimator_.get_params()["classifier"])
-print(gridsearch.best_params_)
-print(gridsearch.best_score_)
+print(grid.best_params_)
+print(grid.best_score_)
 
 # best model setp
 model = LogisticRegression(C=1, class_weight=None, multi_class='ovr', penalty='l1', solver='saga')
